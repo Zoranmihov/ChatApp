@@ -1,10 +1,10 @@
 import * as mongoose from 'mongoose';
 
 export class DBHelper {
-  static init(): void {
+  static init(url): void {
     mongoose
       .connect(
-        'mongodb+srv://FakeUser:FakeUser97@cluster0.cxkvv.mongodb.net/ChatApp',
+        url
       )
       .then(() => console.log('Connection to mongoDB successful'))
       .catch((e: Error) => console.log(`Could not connect to mongo.\n\n${e}`));

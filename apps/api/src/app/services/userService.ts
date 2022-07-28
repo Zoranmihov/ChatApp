@@ -3,32 +3,42 @@ import { RegisterUserData } from '../controllers/userDTO';
 
 import User from '../models/userModel';
 import * as bcrypt from 'bcrypt';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class UserService {
-  async createUser(data: RegisterUserData){
+  constructor(private jwtService: JwtService){}
+  async createUser(data: RegisterUserData) {
     const salt = await bcrypt.genSalt();
-    data.password = await bcrypt.hash(data.password, salt)
-    const user = await User.create(data)
-    if(user){
-      return true
+    data.name = data.name[0].toUpperCase() + data.name.substring(1);
+    data.password = await bcrypt.hash(data.password, salt);
+    const user = await User.create(data);
+    if (user) {
+      return true;
     }
-    false
+    false;
   }
 
-  async validateUser(email: string, password: string){
+  async validateUser(email: string, password: string) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const user: any = await User.findOne({email: email})
-    if (user){
-      const isMatch = await bcrypt.compare(password, user.password)
-      if(isMatch){
-        return user
+    const user: any = await User.findOne({ email: email });
+    if (user) {
+      const isMatch = await bcrypt.compare(password, user.password);
+      if (isMatch) {
+        return user;
       } else {
-        return null
+        return null;
       }
     }
-    return null
+    return null;
+  }
+  async getProfile(access_token){
+    const decoded = await this.jwtService.verifyAsync(access_token)
+    const profile = {
+      email: decoded.email,
+      name: decoded.name
+    };
+    return profile
   }
 }
 
-// const isMatch = await bcrypt.compare(password, hash); for compare

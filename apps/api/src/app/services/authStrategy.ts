@@ -5,6 +5,7 @@ import { UserService } from './userService';
 import { JwtService } from '@nestjs/jwt';
 import { ExtractJwt, Strategy as JStrategy } from 'passport-jwt';
 import { AuthGuard } from '@nestjs/passport';
+import { Request } from "express";
 
 
 
@@ -24,7 +25,7 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
   }
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async login(user: any) {
-    const payload = { email: user.email, sub: user._id };
+    const payload = { email: user.email, name: user.name };
     return {
       access_token: this.jwtService.sign(payload),
     };
@@ -33,11 +34,18 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(JStrategy) {
-  constructor() {
+  constructor(private jwtService: JwtService) {
     super({
-      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      passReqToCallback:true,
       ignoreExpiration: false,
-      secretOrKey: "YouSawNothing",
+      secretOrKey: process.env.JWT_SECRET,
+      jwtFromRequest:ExtractJwt.fromExtractors([(request:Request) => {
+        const data = request?.cookies['jwt'];
+        if(!data){
+            return null;
+        }
+        return data.access_token
+    }])
     });
   }
 
