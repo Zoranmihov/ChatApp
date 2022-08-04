@@ -1,0 +1,39 @@
+<section *ngIf="presentUser">
+  <div id="title-container">
+    <h1>Welcome to ChatApp {{ presentUser.name }}</h1>
+    <h2 id="statusMessage"></h2>
+    <div *ngIf="recivingCall">
+    <h3>Reciving a call from {{callFrom.name}}</h3>
+    <button (click)="answerCall()">Answer</button>
+    <button (click)="rejectCall()">Decline</button>
+  </div>
+    </div>
+
+  <div id="friends-container">
+    <h3>Friends:</h3>
+    <div id="button-container"><button>Add</button><button>Delete</button></div>
+    <div>
+      <div class="friend-card">
+        <p>UserName</p>
+        <div class="icon-container">
+          <span
+            class="material-symbols-outlined icon"
+            (click)="callUser('try1@hotmail.com')"
+          >
+            videocam
+          </span>
+          <span class="material-symbols-outlined icon"> call </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div id="video-container-modal" *ngIf="inCall">
+  <div id="my-stream">
+    <video id="myVideo" [muted]="true" [autoplay]="true"></video>
+  </div>
+  <div id="friend-stream" >
+    <video id="user-video" [autoplay]="true"></video>
+  </div>
+</div>

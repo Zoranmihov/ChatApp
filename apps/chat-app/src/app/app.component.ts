@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Message } from '@chat/api-interfaces';
+
 
 @Component({
   selector: 'chat-root',
@@ -8,6 +7,6 @@ import { Message } from '@chat/api-interfaces';
   styleUrls: ['./app.component.css'],
 })
 export class AppComponent {
-  hello$ = this.http.get<Message>('/api/hello');
-  constructor(private http: HttpClient) {}
+
+
 }

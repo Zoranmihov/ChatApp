@@ -15,7 +15,7 @@ form {
   background-color: white;
   padding: 8px;
 }
-h1{
+h1 {
   text-align: center;
 }
 
@@ -24,7 +24,7 @@ input {
   margin: 6px 0px;
 }
 
-span{
+span {
   color: rgb(201, 19, 19);
   font-size: 14px;
   margin: 6px 4px;
@@ -40,21 +40,24 @@ button {
   transition: 0.4s;
 }
 
-button:disabled{
-  opacity: 0.3;
-}
-
-button:hover{
+button:hover {
   background-color: #23386e;
 }
 
-p{
+button:disabled {
+  opacity: 0.3;
+}
+
+p {
   font-size: 18px;
   margin: 6px 4px;
 }
 
 @media only screen and (max-width: 600px) {
-  input,span,button,p {
+  input,
+  span,
+  button,
+  p {
     font-size: 16px;
   }
 }

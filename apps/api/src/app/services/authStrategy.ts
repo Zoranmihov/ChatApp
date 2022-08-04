@@ -25,7 +25,7 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
   }
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async login(user: any) {
-    const payload = { email: user.email, name: user.name };
+    const payload = { email: user.email, name: user.name, friends: user.friends };
     return {
       access_token: this.jwtService.sign(payload),
     };

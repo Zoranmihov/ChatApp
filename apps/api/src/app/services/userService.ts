@@ -36,7 +36,8 @@ export class UserService {
     const decoded = await this.jwtService.verifyAsync(access_token)
     const profile = {
       email: decoded.email,
-      name: decoded.name
+      name: decoded.name,
+      friends: decoded.friends
     };
     return profile
   }

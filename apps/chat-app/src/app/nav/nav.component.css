@@ -1,0 +1,29 @@
+nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #2d4b94;
+  color: azure;
+  border-bottom: 2px solid black;
+}
+
+span {
+  font-size: 22px;
+  margin: 4px 8px;
+}
+
+.links-container {
+  display: flex;
+  padding: 4px 6px;
+}
+
+.nav-links {
+  font-size: 18px;
+  margin-left: 10px;
+  text-decoration: none;
+  color: azure;
+}
+
+.nav-links:hover {
+  text-decoration: underline;
+}

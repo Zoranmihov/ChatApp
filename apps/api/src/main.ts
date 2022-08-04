@@ -1,6 +1,8 @@
 import * as dotenv from "dotenv";
 dotenv.config({ path: __dirname+'/.env' });
 import * as cookieParser from 'cookie-parser';
+import  {PeerServer} from 'peer'
+
 
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
@@ -21,10 +23,10 @@ async function bootstrap() {
   await app.listen(port);
   app.useGlobalPipes(new ValidationPipe({whitelist: true,}));
   const url = process.env.DATABASE_URL
- await DBHelper.init(url);
+  await DBHelper.init(url);
+  const peerServer = PeerServer({ port: 9000, path: '/myapp' });
   Logger.log(
     `🚀 Application is running on: http://localhost:${port}/${globalPrefix}`
-  );
-}
-
+    );
+  }
 bootstrap();

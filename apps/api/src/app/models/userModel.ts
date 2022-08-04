@@ -15,6 +15,10 @@ const userSchema  = new Schema({
     required: true,
     unique: true
   },
+  friends: {
+    type: Array,
+    default: []
+  }
 })
 
 const User = models.User || model("User", userSchema);

@@ -1,1 +1,41 @@
-<p>register works!</p>
+<section>
+  <div id="register-container">
+    <form [formGroup]="registerForm" (ngSubmit)="register()">
+      <h1>Register</h1>
+      <span #resError></span>
+      <input
+        formControlName="name"
+        type="text"
+        placeholder="Name"
+        id="name"
+        required
+      />
+
+      <input
+        formControlName="email"
+        type="text"
+        id="email"
+        placeholder="Email"
+        required
+      />
+      <span *ngIf="email && email.invalid && email.dirty">Invalid email</span>
+      <input
+        formControlName="password"
+        type="password"
+        placeholder="Password"
+        required
+      />
+      <span *ngIf="password && password.invalid && password.dirty"
+        >Passwords must have at least 8 characters and contain the following:
+        uppercase letters, lowercase letters, numbers, and symbols</span
+      >
+      <button [class.disabled]=""  [disabled]="registerForm.invalid" type="submit">
+        Register
+      </button>
+      <p class="signInText">
+        Already have an account?
+        <a routerLink="/login" class="signInText">Click here to sign in</a>
+      </p>
+    </form>
+  </div>
+  </section>

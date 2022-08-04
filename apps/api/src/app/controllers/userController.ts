@@ -14,12 +14,13 @@ import { RegisterUserData } from './userDTO';
 import { AuthGuard } from '@nestjs/passport';
 import { Response } from 'express';
 import { Request as eRequest } from 'express';
-
+import { LiveChat } from './chat.gateway';
 @Controller('/user')
 export class UserController {
   constructor(
     private userService: UserService,
-    private passportAuth: LocalStrategy
+    private passportAuth: LocalStrategy,
+    private liveChat: LiveChat,
   ) {}
 
   @Post('create-user')
@@ -41,12 +42,11 @@ export class UserController {
   ) {
     const jwt = await this.passportAuth.login(req.user);
     res.cookie('jwt', jwt, { httpOnly: true, maxAge: 3 * 24 * 60 * 60 * 1000 });
-    return 'Success';
   }
 
   @UseGuards(JwtAuthGuard)
   @Get('profile')
-  async protectedRoute(@Request() req: eRequest) {
+  async getProfile(@Request() req: eRequest) {
     const data = req?.cookies['jwt'];
     return this.userService.getProfile(data.access_token)
 
@@ -56,4 +56,16 @@ export class UserController {
   async logout(@Res({ passthrough: true }) res: Response) {
     res.cookie('jwt', "", { httpOnly: true, maxAge: 5 });
   }
+
+  @Get('allUsers')
+   getUsers(@Res({ passthrough: true }) res: Response) {
+    return this.liveChat.getUsers()
+  }
+
+  //How to start a room
+  // @UseGuards(JwtAuthGuard)
+  // @Get('call')
+  // async test(@Res({ passthrough: true }) res: Response) {
+  //   this.liveChat.testExample("potato" ,"HurrDurr")
+  // }
 }

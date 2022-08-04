@@ -1,0 +1,8 @@
+<nav>
+  <span>ChatApp</span>
+  <div class="links-container" *ngIf="statement"></div>
+  <div class="links-container" *ngIf="!statement">
+    <a class="nav-links" routerLink="register">Sign up</a>
+    <a class="nav-links" routerLink="login">Sign in</a>
+  </div>
+</nav>
