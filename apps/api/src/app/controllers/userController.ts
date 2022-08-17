@@ -61,11 +61,4 @@ export class UserController {
    getUsers(@Res({ passthrough: true }) res: Response) {
     return this.liveChat.getUsers()
   }
-
-  //How to start a room
-  // @UseGuards(JwtAuthGuard)
-  // @Get('call')
-  // async test(@Res({ passthrough: true }) res: Response) {
-  //   this.liveChat.testExample("potato" ,"HurrDurr")
-  // }
 }

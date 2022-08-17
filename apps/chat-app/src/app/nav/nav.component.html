@@ -1,8 +1,28 @@
-<nav>
+<nav *ngIf="loaded">
   <span>ChatApp</span>
-  <div class="links-container" *ngIf="statement"></div>
+  <div class="links-container" *ngIf="statement">
+    <a class="nav-links" [ngStyle]="{'color': presentUser.requests.length ? 'greenyellow' : 'azure'}" (click)="openModal()">Requests</a>
+    <a class="nav-links" routerLink="login">Logout</a>
+  </div>
   <div class="links-container" *ngIf="!statement">
     <a class="nav-links" routerLink="register">Sign up</a>
     <a class="nav-links" routerLink="login">Sign in</a>
   </div>
 </nav>
+
+
+<!-- Add a requests modal -->
+
+<div id="requests-modal">
+  <div style="display: flex; margin: 2% 0;">
+    <h2 style="color: azure">Requests</h2>
+    <h2 id="X" (click)="closeModal()">X</h2>
+  </div>
+  <div id="card" *ngFor="let request of presentUser.requests">
+    <p>{{request.fromName}} has sent you a friends request</p>
+    <div>
+      <button (click)="respondToRequest(request.fromEmail, 'Accept')">Accept</button>
+      <button (click)="respondToRequest(request.fromEmail, 'Reject')">Reject</button>
+    </div>
+  </div>
+</div>

@@ -18,6 +18,10 @@ const userSchema  = new Schema({
   friends: {
     type: Array,
     default: []
+  },
+  friendRequests: {
+    type: Array,
+    default: []
   }
 })
 

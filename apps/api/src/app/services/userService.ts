@@ -34,12 +34,32 @@ export class UserService {
   }
   async getProfile(access_token){
     const decoded = await this.jwtService.verifyAsync(access_token)
+    const user: any = await User.findOne({ email: decoded.email });
     const profile = {
       email: decoded.email,
       name: decoded.name,
-      friends: decoded.friends
+      friends: user.friends,
+      requests: user.friendRequests
     };
     return profile
+  }
+
+  async request(email: string, name: string, senderEmail: string) {
+    const user: any = await User.findOne({ email: email });
+    const requests = user.friendRequests;
+    requests.push({fromName: name, fromEmail: senderEmail})
+    await User.findOneAndUpdate({email: email}, {friendRequests: requests}, {new: true})
+    return requests
+  }
+  async respondTorequest(responseUser, requestUser, status) {
+    const responseUser = await User.findOne({ email: responseUser })
+    const requestUserEmail = requestUser;
+    if(status === 'Accept') {
+      const requestUser = await User.findOne({ email: requestUserEmail })
+      // Add in responseUser friends list
+    } else {
+
+    }
   }
 }
 

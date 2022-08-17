@@ -1,13 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import {
-  Component,
-  OnDestroy,
-  OnInit,
-} from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormGroup, FormControl } from '@angular/forms';
 import { UserServiceService } from '../services/user-service.service';
 import { Socket } from 'ngx-socket-io';
 import { PeerLogic } from './peerLogic';
+import { ModalLogic } from './modalLogic';
 
 @Component({
   selector: 'chat-dashboard',
@@ -15,23 +13,29 @@ import { PeerLogic } from './peerLogic';
   styleUrls: ['./dashboard.component.css'],
 })
 export class DashboardComponent implements OnInit, OnDestroy {
-  presentUser: any;
+  presentUser: any = false;
   myPeerId: any;
 
   constructor(
     private user: UserServiceService,
     private socket: Socket,
-    private peerLogic: PeerLogic
+    private peerLogic: PeerLogic,
+    private modalLogic: ModalLogic
   ) {
     this.myPeerId = this.peerLogic.initPeer();
   }
 
+  addFriend = new FormGroup({
+    email: new FormControl(''),
+  });
+
   // Calling states
   stream: any;
   recivingCall = false;
-  inCall = false
+  inCall = false;
   callFrom: any;
 
+  // Calling functions
   callUser(email: string) {
     this.socket.emit('callUser', {
       userToCall: email,
@@ -45,20 +49,43 @@ export class DashboardComponent implements OnInit, OnDestroy {
       called: this.presentUser.email,
       peerToCall: this.myPeerId,
     });
-    this.inCall = true
+    this.inCall = true;
+    this.recivingCall = false;
     this.peerLogic.answerCall();
   }
 
   rejectCall() {
-    this.socket.emit('rejectCall', { callerEmail: this.callFrom.email, callerName: this.callFrom.name });
+    this.socket.emit('rejectCall', {
+      callerEmail: this.callFrom.email,
+      callerName: this.callFrom.name,
+    });
     this.recivingCall = false;
     this.callFrom = null;
   }
 
   endCall() {
-    this.peerLogic.endCall()
-    this.inCall = false
+    this.peerLogic.endCall();
+    this.inCall = false;
   }
+
+  sendFriendRequest(){
+    this.socket.emit('friendRequest', {email: this.addFriend.get('email')?.value, name: this.presentUser.name, senderEmail: this.presentUser.email})
+  }
+
+  // Modal functions
+
+  openFriendsModal() {
+    const modal = document.querySelector('#friend-modal');
+    this.modalLogic.openModal(modal);
+  }
+
+  closeFriendsModal(){
+    const modal = document.querySelector('#friend-modal');
+    this.modalLogic.closeModal(modal)
+    this.addFriend.reset()
+  }
+
+  // Lifecycle hooks
 
   ngOnInit(): void {
     this.user.checkUser();
@@ -67,8 +94,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
       this.presentUser = user;
     });
     this.socket.on('hey', (data: any) => {
-      if (this.recivingCall) {
-        this.socket.emit('rejectCall', { callerEmail: data.from.email, callerName: data.from.name });
+      if (this.recivingCall || this.inCall) {
+        this.socket.emit('rejectCall', {
+          callerEmail: data.from.email,
+          callerName: data.from.name,
+        });
       } else {
         this.recivingCall = true;
         this.callFrom = data.from;
@@ -77,7 +107,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
     this.socket.on('callAccepted', (data: any) => {
       this.peerLogic.callUser(data.peerToCall);
-      this.inCall = true
+      this.inCall = true;
     });
     this.socket.on('callRejected', (data: any) => {
       const statusMessage: any = document.querySelector('#statusMessage');
@@ -90,6 +120,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-      this.peerLogic.destroyPeer()
+    this.peerLogic.destroyPeer();
   }
 }

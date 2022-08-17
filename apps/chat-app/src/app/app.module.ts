@@ -12,6 +12,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 
 import { UserServiceService } from './services/user-service.service';
 import { PeerLogic } from './dashboard/peerLogic';
+import { ModalLogic } from './dashboard/modalLogic';
 
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 
@@ -44,7 +45,7 @@ export function basicLoader(user: UserServiceService){
     ReactiveFormsModule,
     SocketIoModule.forRoot(config),
   ],
-  providers: [UserServiceService, PeerLogic, {provide: APP_INITIALIZER, useFactory: basicLoader, deps: [UserServiceService], multi: true}],
+  providers: [UserServiceService, PeerLogic, ModalLogic, {provide: APP_INITIALIZER, useFactory: basicLoader, deps: [UserServiceService], multi: true}],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
